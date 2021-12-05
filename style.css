@@ -1,0 +1,45 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.maindiv{
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    border: 1px solid black;
+    justify-content: space-between;
+    background : linear-gradient(#334d50,#cbcaa5);
+
+}
+.innerdiv{
+    /* background: #028876; */
+    color: khaki;
+    width: 70%;
+    margin: auto;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+}
+.highlightbtn{
+    animation-delay: 0.8s;
+}
+
+.innerdiv-1{
+    /* border: 1px solid black; */
+    margin-bottom: 10px;
+}
+
+.maincard{
+    min-height: 200px;
+    background-color: rgba(81, 146, 137, 0.575);
+    border: 4px solid rgba(81, 146, 137, 0.575);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding-bottom: 10px;
+    padding-top: 10px;
+}
