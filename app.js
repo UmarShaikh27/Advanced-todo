@@ -73,5 +73,6 @@ function editfunc(x){
 }
 
 function delfunc(x){
-    x.parentNode.style.display = "none"  
+    x.parentNode.parentNode.style.display = "none"  
 }
+
