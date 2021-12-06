@@ -7,7 +7,7 @@
 .maindiv{
     display: flex;
     flex-direction: column;
-    height: 100vh;
+    min-height: 100vh;
     /* border: 1px solid black; */
     justify-content: space-between;
     background : linear-gradient(#334d50,#cbcaa5);
@@ -42,4 +42,7 @@
     justify-content: space-between;
     padding-bottom: 10px;
     padding-top: 10px;
+}
+.addpadding{
+    padding: 10px;
 }

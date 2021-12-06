@@ -66,10 +66,11 @@ function deleteallfunction(){
 }
 
 function editfunc(x){
-    var asktitle = prompt("Edit title", x.parentNode.firstElementChild.innerHTML )
-    var askdesc = prompt("Edit description" , x.parentNode.firstElementChild.nextElementSibling.innerHTML)
-    x.parentNode.firstElementChild.innerHTML = asktitle
-    x.parentNode.firstElementChild.nextElementSibling.innerHTML = askdesc
+    var asktitle = prompt("Edit title", x.parentNode.parentNode.firstElementChild.innerHTML )
+    var askdesc = prompt("Edit description" , x.parentNode.parentNode.firstElementChild.nextElementSibling.innerHTML)
+    x.parentNode.parentNode.firstElementChild.innerHTML = asktitle
+    x.parentNode.parentNode.firstElementChild.nextElementSibling.innerHTML = askdesc
+    
 }
 
 function delfunc(x){
