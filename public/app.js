@@ -1,79 +1,138 @@
-function addfunction(){
-    //GETTING INPUTS
-    var titleinp = document.getElementById("titleinp")
-    var descinp = document.getElementById("descinp")
+// Initialize todos array and load from localStorage
+let todos = JSON.parse(localStorage.getItem('todos')) || [];
+let currentId = parseInt(localStorage.getItem('currentId')) || 0;
 
- if(titleinp.value.length > 2 && descinp.value.length > 2){
-        // CREATING ELEMENTS
-    //div
-    var thecard = document.createElement("div")
-    thecard.classList.add("maincard")
-    thecard.classList.add("col-lg-3")
-    thecard.classList.add("col-md-4")
-    thecard.classList.add("col-sm-6")
-    thecard.classList.add("animate__animated")
-    thecard.classList.add("animate__fadeInDown")
-    
-    
-    //heading and p
-    var cardheading = document.createElement("h2")
-    var carddescription = document.createElement("p")
+// Load todos on page load
+document.addEventListener('DOMContentLoaded', () => {
+    loadTodos();
+});
 
-    //buttons
-    var editbtn = document.createElement("button")
-    editbtn.classList.add("btn")
-    editbtn.classList.add("btn-warning")
-    editbtn.classList.add("btn-sm")
-
-    var delbtn = document.createElement("button")
-    delbtn.classList.add("btn")
-    delbtn.classList.add("btn-danger")
-    delbtn.classList.add("btn-sm")
-
-    var btnsdiv = document.createElement("div")
-    btnsdiv.appendChild(editbtn)
-    btnsdiv.appendChild(delbtn)
-
-    editbtn.setAttribute("onclick" , "editfunc(this)")
-    delbtn.setAttribute("onclick" , "delfunc(this)")
-
-
-    //SETTING VALUES FOR INPUTS AND BUTTONS
-    cardheading.innerHTML = titleinp.value
-    carddescription.innerHTML = descinp.value
-    editbtn.innerHTML = "EDIT"
-    delbtn.innerHTML = "DELETE"
-
-    //APPENDING THE CREATED ELEMENTS
-    thecard.appendChild(cardheading)
-    thecard.appendChild(carddescription)
-    thecard.appendChild(btnsdiv)
-
-    //SHOWING IN HTML
-    var carddiv = document.getElementById("carddiv")
-    carddiv.appendChild(thecard)
-
- }
- else{
-     alert("Input too short for a Reminder")
- }
+function saveTodos() {
+    localStorage.setItem('todos', JSON.stringify(todos));
+    localStorage.setItem('currentId', currentId.toString());
 }
 
-function deleteallfunction(){
-    var carddiv = document.getElementById("carddiv")
-    
-    carddiv.innerHTML = ""
+function loadTodos() {
+    const carddiv = document.getElementById("carddiv");
+    carddiv.innerHTML = "";
+    todos.forEach(todo => {
+        createTodoCard(todo);
+    });
 }
 
-function editfunc(x){
-    var asktitle = prompt("Edit title", x.parentNode.parentNode.firstElementChild.innerHTML )
-    var askdesc = prompt("Edit description" , x.parentNode.parentNode.firstElementChild.nextElementSibling.innerHTML)
-    x.parentNode.parentNode.firstElementChild.innerHTML = asktitle
-    x.parentNode.parentNode.firstElementChild.nextElementSibling.innerHTML = askdesc
-    
+function addfunction() {
+    const titleinp = document.getElementById("titleinp");
+    const descinp = document.getElementById("descinp");
+    const dueDateInp = document.getElementById("dueDateInp");
+    const priorityInp = document.getElementById("priorityInp");
+
+    if (titleinp.value.length > 2 && descinp.value.length > 2) {
+        const todo = {
+            id: currentId++,
+            title: titleinp.value,
+            description: descinp.value,
+            dueDate: dueDateInp.value,
+            priority: priorityInp.value,
+            completed: false,
+            createdAt: new Date().toISOString()
+        };
+
+        todos.push(todo);
+        createTodoCard(todo);
+        saveTodos();
+
+        // Clear inputs
+        titleinp.value = "";
+        descinp.value = "";
+        dueDateInp.value = "";
+        priorityInp.value = "low";
+    } else {
+        alert("Title and description must be at least 3 characters long");
+    }
 }
 
-function delfunc(x){
-    x.parentNode.parentNode.style.display = "none"  
+function createTodoCard(todo) {
+    const thecard = document.createElement("div");
+    thecard.classList.add("maincard", "col-lg-3", "col-md-4", "col-sm-6", "animate__animated", "animate__fadeInDown");
+    thecard.dataset.todoId = todo.id;
+
+    const priorityBadge = `<span class="badge badge-${getPriorityColor(todo.priority)}">${todo.priority}</span>`;
+    const dueDateStr = todo.dueDate ? `<small class="text-muted">Due: ${new Date(todo.dueDate).toLocaleString()}</small>` : '';
+
+    thecard.innerHTML = `
+        <div class="d-flex justify-content-between align-items-center">
+            <h2 class="${todo.completed ? 'completed' : ''}">${todo.title} ${priorityBadge}</h2>
+            <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" id="complete-${todo.id}" 
+                    ${todo.completed ? 'checked' : ''} onchange="toggleComplete(${todo.id})">
+                <label class="custom-control-label" for="complete-${todo.id}"></label>
+            </div>
+        </div>
+        <p class="${todo.completed ? 'completed' : ''}">${todo.description}</p>
+        ${dueDateStr}
+        <div class="btn-group mt-2">
+            <button class="btn btn-warning btn-sm" onclick="editfunc(${todo.id})">EDIT</button>
+            <button class="btn btn-danger btn-sm" onclick="delfunc(${todo.id})">DELETE</button>
+        </div>
+    `;
+
+    document.getElementById("carddiv").appendChild(thecard);
+}
+
+function getPriorityColor(priority) {
+    switch(priority) {
+        case 'high': return 'danger';
+        case 'medium': return 'warning';
+        default: return 'info';
+    }
+}
+
+function toggleComplete(id) {
+    const todo = todos.find(t => t.id === id);
+    if (todo) {
+        todo.completed = !todo.completed;
+        saveTodos();
+        loadTodos();
+    }
+}
+
+function editfunc(id) {
+    const todo = todos.find(t => t.id === id);
+    if (todo) {
+        document.getElementById('editTodoId').value = todo.id;
+        document.getElementById('editTitleInp').value = todo.title;
+        document.getElementById('editDescInp').value = todo.description;
+        document.getElementById('editDueDateInp').value = todo.dueDate;
+        document.getElementById('editPriorityInp').value = todo.priority;
+        $('#editModal').modal('show');
+    }
+}
+
+function saveEdit() {
+    const id = parseInt(document.getElementById('editTodoId').value);
+    const todo = todos.find(t => t.id === id);
+    if (todo) {
+        todo.title = document.getElementById('editTitleInp').value;
+        todo.description = document.getElementById('editDescInp').value;
+        todo.dueDate = document.getElementById('editDueDateInp').value;
+        todo.priority = document.getElementById('editPriorityInp').value;
+        saveTodos();
+        loadTodos();
+        $('#editModal').modal('hide');
+    }
+}
+
+function delfunc(id) {
+    todos = todos.filter(t => t.id !== id);
+    saveTodos();
+    loadTodos();
+}
+
+function deleteallfunction() {
+    if (confirm('Are you sure you want to delete all todos?')) {
+        todos = [];
+        saveTodos();
+        document.getElementById("carddiv").innerHTML = "";
+    }
 }
 

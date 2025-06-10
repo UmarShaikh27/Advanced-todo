@@ -30,6 +30,17 @@
 
            <h3 class="m-auto">DESCRIPTION</h3>
            <textarea class="form-control" id="descinp"></textarea>
+           
+           <h3 class="m-auto mt-3">DUE DATE</h3>
+           <input type="datetime-local" class="form-control" id="dueDateInp">
+           
+           <h3 class="m-auto mt-3">PRIORITY</h3>
+           <select class="form-control" id="priorityInp">
+               <option value="low">Low</option>
+               <option value="medium">Medium</option>
+               <option value="high">High</option>
+           </select>
+           
            <div class="btndiv mt-3 ml-auto mr-auto">
             <button class="btn btn-primary animate__animated animate__fadeInUp highlightbtn" onclick="addfunction()">ADD <i class="fas fa-plus"></i></button>
            <button class="btn btn-danger animate__animated animate__fadeInUp highlightbtn" onclick="deleteallfunction()">DELETE ALL <i class="fas fa-trash"></i></button>
@@ -45,6 +56,47 @@
             
         </div>
 
+    </div>
+
+    <!-- Edit Modal -->
+    <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editModalLabel">Edit Todo</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="editTodoId">
+                    <div class="form-group">
+                        <label>Title</label>
+                        <input type="text" class="form-control" id="editTitleInp">
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea class="form-control" id="editDescInp"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Due Date</label>
+                        <input type="datetime-local" class="form-control" id="editDueDateInp">
+                    </div>
+                    <div class="form-group">
+                        <label>Priority</label>
+                        <select class="form-control" id="editPriorityInp">
+                            <option value="low">Low</option>
+                            <option value="medium">Medium</option>
+                            <option value="high">High</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="saveEdit()">Save changes</button>
+                </div>
+            </div>
+        </div>
     </div>
 </body>
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
